@@ -8,5 +8,3 @@ __copyright__ = "Copyright 2017/2018 – Tobias Denzer & Markus Kalusche \
                 @ EPR-Goethe-Uni"
 __credits__ = "nobody"
 __email__ = "s1539940@stud.uni-frankfurt.de"
-
-#adds
