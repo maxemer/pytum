@@ -40,22 +40,22 @@ def generate_area(cols, rows):
 
 def console_output(area):
     cur_row = 1
-    cout = ''
+    cout = '⌈ 1 2 3 4 5 6 7 ⌉\n' + str(cur_row) + ' '
 
     #run through all fields in the area
     for field in area:
         if cur_row != field.get_row():
-            cout += '\n'
+            cout += str(cur_row) + '\n' + str(field.get_row()) + ' '
             cur_row = field.get_row()
         if 'p1' == field.get_state():
-            cout += 'B'
+            cout += 'B '
         elif 'p2' == field.get_state():
-            cout += 'W'
+            cout += 'W '
         elif 'bl' == field.get_state():
-            cout += 'X'
+            cout += 'X '
         else:
-            cout += '-'
-
+            cout += '- '
+    cout += str(cur_row) + '\n⌊ 1 2 3 4 5 6 7 ⌋'
     print(cout)
     
 def main():
@@ -71,10 +71,18 @@ def main():
         return ok
 
     def block_random_fields():
-        rand = randint(1, empty_fields)
-        for i in range(rand):
-            if not change_state(randint(1, cols), randint(1, rows), 'bl'):
+        while True:
+            rand = randint(5, 13)
+            #print(rand)
+            if rand % 2:
+                break
+            else:
                 continue
+        c = 0
+        while c < rand:
+            if change_state(randint(1, cols), randint(1, rows), 'bl'):
+                c += 1
+        return rand
 
     cols = 7
     rows = 7
@@ -86,10 +94,11 @@ def main():
     for field in area:
         print(field.get_row(), field.get_col(), field.get_state())"""
 
-    block_random_fields()
+    empty_fields -= block_random_fields()
 
     while True:
         console_output(area)
+        #print(empty_fields)
 
         if empty_fields > 0:
             cin = input('--> ')
