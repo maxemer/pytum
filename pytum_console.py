@@ -194,8 +194,8 @@ def main():
     # round loop
     while True:
         console_output(area)
-        print('points player 1', calculate_points('p1'))
-        print('points player 2', calculate_points('p2'))
+        print('points player 1:', calculate_points('p1'))
+        print('points player 2:', calculate_points('p2'))
         #print(empty_fields)
 
         # when game-area is not full

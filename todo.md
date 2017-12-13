@@ -1,3 +1,3 @@
 + inputs for new round (r), quit (q) nd undo multiple steps (u*)
-+ calc points and final winner
++ manual, better ui with winner and so on...
 + computer as player 2
