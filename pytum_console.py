@@ -100,6 +100,14 @@ def main():
                 c += 1
         return rand
 
+    def calculate_points(player):
+        """returns the total points of a player"""
+        results = []
+        # run through all fields in the area
+        for field in area:
+            if field.get_state() == player:
+                results.append(field)
+
     # start values
     cols = 7
     rows = 7
