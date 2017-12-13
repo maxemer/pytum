@@ -102,11 +102,80 @@ def main():
 
     def calculate_points(player):
         """returns the total points of a player"""
+        def stones_to_points(s):
+            """returns points by the number of given stones"""
+            points = 0
+            if s >= 7:
+                points += 119
+            elif s == 6:
+                points += 56
+            elif s == 5:
+                points += 25
+            elif s == 4:
+                points += 10
+            elif s == 3:
+                points += 3
+            return points
+
+        # start values
+        col = 1
+        row = 1
+        points = 0
         results = []
+
         # run through all fields in the area
         for field in area:
+            # when field is occupied by player, append it to 'results'
             if field.get_state() == player:
                 results.append(field)
+
+        # run through all columns
+        while col <= cols:
+            row_list = []
+            stones = 1
+            # run through all results
+            for res in results:
+                # when current field matches field from 'results',
+                # append row to 'row_list'
+                if res.get_col() == col:
+                    row_list.append(res.get_row())
+            c = 0
+            # run through 'row_list
+            while c < len(row_list):
+                if c > 0:
+                    # when row is next to the another row,
+                    # increase 'stones'
+                    if (row_list[c] - row_list[c - 1]) == 1:
+                        stones += 1
+                c += 1
+            # assign points by stones
+            points += stones_to_points(stones)
+            col += 1
+
+        # run through all rows
+        while row <= rows:
+            col_list = []
+            stones = 1
+            # run through all results
+            for res in results:
+                # when current field matches field from 'results',
+                # append column to 'col_list'
+                if res.get_row() == row:
+                    col_list.append(res.get_col())
+            c = 0
+            # run through col_list'
+            while c < len(col_list):
+                if c > 0:
+                    # when column is next to the another column,
+                    # increase 'stones'
+                    if (col_list[c] - col_list[c - 1]) == 1:
+                        stones += 1
+                c += 1
+            # assign points by stones
+            points += stones_to_points(stones)
+            row += 1
+
+        return points
 
     # start values
     cols = 7
@@ -125,6 +194,8 @@ def main():
     # round loop
     while True:
         console_output(area)
+        print('points player 1', calculate_points('p1'))
+        print('points player 2', calculate_points('p2'))
         #print(empty_fields)
 
         # when game-area is not full
@@ -159,6 +230,7 @@ def main():
         # when game-area is full
         else:
             cur_player = 'p1'
+            break
 
 if __name__ == '__main__':
     main()
