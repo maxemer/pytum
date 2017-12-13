@@ -111,6 +111,7 @@ def main():
     for field in area:
         print(field.get_row(), field.get_col(), field.get_state())"""
 
+    # decrease 'empty_fields'-var by blocked fields
     empty_fields -= block_random_fields()
 
     # round loop
