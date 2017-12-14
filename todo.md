@@ -1,5 +1,3 @@
-+ input blocked fields
-+ undo function
++ input for blocked fields
 + helpfile!
 + computer as player 2
-+ Bildschirmausgabe statisch!
