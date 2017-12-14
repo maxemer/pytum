@@ -233,12 +233,12 @@ def main():
             #print('points player 1:', calculate_points('p1'))
             #print('points player 2:', calculate_points('p2'))
             #print(empty_fields)
-            print(turn)
+            print('Turn:', turn)
 
             # test-print the objects
-            for field in area:
+            """for field in area:
                 print('r:', field.get_row(), ',c:', field.get_col(), \
-                ',s:', field.get_state(), ',t:', field.get_turn())
+                ',s:', field.get_state(), ',t:', field.get_turn())"""
 
             # when game-area is not full
             if empty_fields > 0:
