@@ -1,3 +1,4 @@
-+ inputs for new round (r), quit (q) nd undo multiple steps (u*)
-+ manual, better ui with winner and so on...
++ undo function
++ helpfile!
 + computer as player 2
++ Bildschirmausgabe statisch!

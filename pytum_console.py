@@ -178,59 +178,129 @@ def main():
         return points
 
     # start values
+    game = True
     cols = 7
     rows = 7
-    area = generate_area(cols, rows)
-    cur_player = 'p1'
-    empty_fields = cols * rows
 
-    """# test-print the objects
-    for field in area:
-        print(field.get_row(), field.get_col(), field.get_state())"""
+    # game loop
+    while game:
+        # start values
+        area = generate_area(cols, rows)
+        cur_player = 'p1'
+        empty_fields = cols * rows
+        round = True
 
-    # decrease 'empty_fields'-var by blocked fields
-    empty_fields -= block_random_fields()
+        """# test-print the objects
+        for field in area:
+            print(field.get_row(), field.get_col(), field.get_state())"""
 
-    # round loop
-    while True:
-        console_output(area)
-        print('points player 1:', calculate_points('p1'))
-        print('points player 2:', calculate_points('p2'))
-        #print(empty_fields)
+        # decrease 'empty_fields'-var by blocked fields
+        empty_fields -= block_random_fields()
 
-        # when game-area is not full
-        if empty_fields > 0:
-            cin = input('--> ')
-            # when input length is not valid, print error and continue
-            if len(cin) > 2 or len(cin) < 1:
-                print('please enter from 1 to 2 characters!')
-                continue
-            # when input length is valid
-            else:
-                # when inputs are not valid to the game columns and rows,
-                # print error and continue
-                if int(cin[0]) > rows or int(cin[1]) > cols:
-                    print('your inputs are out of range!')
-                    continue
-                # when inputs are valid
+
+
+        # round loop
+        while round:
+            console_output(area)
+            #print('points player 1:', calculate_points('p1'))
+            #print('points player 2:', calculate_points('p2'))
+            #print(empty_fields)
+
+            # when game-area is not full
+            if empty_fields > 0:
+                # when current player is p1
+                if cur_player == 'p1':
+                    print('turn for black')
+                # when current player is p2
                 else:
-                    # when field is not empty, print error and continue
-                    if not change_state(int(cin[1]), int(cin[0]), cur_player):
-                        print('please choose an empty field!')
-                        continue
-                    # when field is empty, decreases 'empty_fields'-var
-                    else:
-                        empty_fields -= 1
+                    print('turn for white')
 
-            # switch player
-            if cur_player != 'p1':
-                cur_player = 'p1'
+                cin = input('--> ').lower()
+
+                # when input is not empty
+                if len(cin) > 0:
+                    # when input is digit
+                    if cin.isdigit():
+                        # when input length is not valid, print error and continue
+                        if len(cin) > 2 or len(cin) < 1:
+                            print('please enter from 1 to 2 characters!')
+                            continue
+                        # when input length is valid
+                        else:
+                            # when inputs are not valid to the game columns and rows,
+                            # print error and continue
+                            if int(cin[0]) > rows or int(cin[1]) > cols \
+                            or int(cin[0]) < 1 or int(cin[1]) < 1:
+                                print('your inputs are out of range!')
+                                continue
+                            # when inputs are valid
+                            else:
+                                # when field is not empty, print error and continue
+                                if not change_state(int(cin[1]), int(cin[0]), cur_player):
+                                    print('please choose an empty field!')
+                                    continue
+                                # when field is empty, decreases 'empty_fields'-var
+                                else:
+                                    empty_fields -= 1
+                    # when input is not full digit
+                    else:
+                        # when input length is higher than 1, start 'undo'
+                        if len(cin) > 1:
+                            # when input contains an 'u' and digits after that
+                            if cin.find('u') == 0 \
+                            and cin.replace('u', '').isdigit():
+                                print('todo: undo')
+                            # ...when not
+                            else:
+                                print('unknown statement. '
+                                      'please check out the help (h)!')
+                            continue
+                        # when input length is 1
+                        else:
+                            # when input contains an 'c'
+                            if cin.find('c') == 0:
+                                print('todo: computer-mode')
+                                continue
+                            # when input contains an 'h'
+                            if cin.find('h') == 0:
+                                print('todo: help')
+                                continue
+                            # when input contains an 'q'
+                            elif cin.find('q') == 0:
+                                game = False
+                                break
+                            # when input contains an 'r'
+                            elif cin.find('r') == 0:
+                                empty_fields = 0
+                # when input is empty
+                else:
+                    print('please make an input!')
+                    continue
+
+                # switch player
+                if cur_player != 'p1':
+                    cur_player = 'p1'
+                else:
+                    cur_player = 'p2'
+
+            # when game-area is full
             else:
-                cur_player = 'p2'
-        # when game-area is full
-        else:
-            cur_player = 'p1'
-            break
+                round = False
+                points_p1 = calculate_points('p1')
+                points_p2 = calculate_points('p2')
+
+                print('points for black:', points_p1)
+                print('points for white:', points_p2)
+
+                # when player1 has more points than player2
+                if points_p1 > points_p2:
+                    print('the winner is black!')
+                # when player2 has more points than player1
+                elif points_p2 > points_p1:
+                    print('the winner is white!')
+                # when points are equal
+                else:
+                    print('points are equal. game is undecided!')
 
 if __name__ == '__main__':
     main()
