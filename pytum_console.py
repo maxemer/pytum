@@ -3,6 +3,7 @@ PyTum Game in Console and Functions
 from EPR-Job No.5
 """
 from random import randint
+from os import name as os_name, system
 __author__ = "6598273: Markus Kalusche, 6768647: Tobias Denzer"
 __copyright__ = "Copyright 2017/2018 – Tobias Denzer & Markus Kalusche \
                 @ EPR-Goethe-Uni"
@@ -11,11 +12,12 @@ __email__ = "s1539940@stud.uni-frankfurt.de"
 
 class Field():
     """class: field"""
-    def __init__(self, col = 0, row = 0, state = 'em'):
+    def __init__(self, col = 0, row = 0, state = 'em', turn = 0):
         """constructor"""
         self.col = col
         self.row = row
         self.state = state
+        self.turn =  turn
     def get_col(self):
         """returns column as integer"""
         return self.col
@@ -26,9 +28,13 @@ class Field():
         """returns state as string (em := empty, bl := blocked,
         p1 := player1/black, p2 := player2/white)"""
         return self.state
-    def set_state(self, new_state):
+    def get_turn(self):
+        """returns turn as integer"""
+        return self.turn
+    def set_state(self, new_state, turn):
         """set a new state of the field"""
         self.state = new_state
+        self.turn = turn
 
 def generate_area(cols, rows):
     """generate a new area for the game
@@ -44,8 +50,19 @@ def generate_area(cols, rows):
         col = 1
     return area
 
+def console_clear():
+    """clears the console output based on the os.name"""
+    if os_name == 'nt':
+        system('cls')
+    elif os_name == 'Darwin':
+        system('clear')
+    else:
+        print('\n' * 99)
+    print('\n')
+
 def console_output(area):
     """console output of the area of fields"""
+    console_clear()
     cur_row = 1
     cout = '⌈ 1 2 3 4 5 6 7 ⌉\n' + str(cur_row) + ' '
     # run through all fields in the area
@@ -67,20 +84,6 @@ def console_output(area):
 def main():
     """Main-Program for the Game"""
 
-    def change_state(col, row, new_state):
-        """change state by column and row"""
-        ok = False
-        # run through all fields in the area
-        for field in area:
-            # when found specific field
-            if field.get_col() == col and field.get_row() == row:
-                # when field is empty, set new state and break the loop
-                if field.get_state() == 'em':
-                    ok = True
-                    field.set_state(new_state)
-                    break
-        return ok
-
     def block_random_fields():
         """blocks a random count of fields
         (between 5 and 13 and returns it)
@@ -99,6 +102,20 @@ def main():
             if change_state(randint(1, cols), randint(1, rows), 'bl'):
                 c += 1
         return rand
+
+    def change_state(col, row, new_state, turn = 0):
+        """change state by column and row"""
+        ok = False
+        # run through all fields in the area
+        for field in area:
+            # when found specific field
+            if field.get_col() == col and field.get_row() == row:
+                # when field is empty, set new state and break the loop
+                if field.get_state() == 'em':
+                    ok = True
+                    field.set_state(new_state, turn)
+                    break
+        return ok
 
     def calculate_points(player):
         """returns the total points of a player"""
@@ -177,6 +194,22 @@ def main():
 
         return points
 
+    def help():
+        """prints a help text / manual"""
+        print('this is the helpfile')
+
+    def undo(step, turn):
+        """undoes the states of the area given by turns"""
+        # until all seps are gone
+        while step > 0:
+            # run through all fields in the area
+            for field in area:
+                # when field found, reset/decrease values
+                if field.get_turn() == turn:
+                    field.set_state('em', 0)
+                    step -= 1
+                    turn -= 1
+
     # start values
     game = True
     cols = 7
@@ -188,16 +221,11 @@ def main():
         area = generate_area(cols, rows)
         cur_player = 'p1'
         empty_fields = cols * rows
+        turn = 1
         round = True
-
-        """# test-print the objects
-        for field in area:
-            print(field.get_row(), field.get_col(), field.get_state())"""
 
         # decrease 'empty_fields'-var by blocked fields
         empty_fields -= block_random_fields()
-
-
 
         # round loop
         while round:
@@ -205,6 +233,12 @@ def main():
             #print('points player 1:', calculate_points('p1'))
             #print('points player 2:', calculate_points('p2'))
             #print(empty_fields)
+            print(turn)
+
+            # test-print the objects
+            for field in area:
+                print('r:', field.get_row(), ',c:', field.get_col(), \
+                ',s:', field.get_state(), ',t:', field.get_turn())
 
             # when game-area is not full
             if empty_fields > 0:
@@ -222,7 +256,7 @@ def main():
                     # when input is digit
                     if cin.isdigit():
                         # when input length is not valid, print error and continue
-                        if len(cin) > 2 or len(cin) < 1:
+                        if len(cin) > 2 or len(cin) < 2:
                             print('please enter from 1 to 2 characters!')
                             continue
                         # when input length is valid
@@ -236,12 +270,13 @@ def main():
                             # when inputs are valid
                             else:
                                 # when field is not empty, print error and continue
-                                if not change_state(int(cin[1]), int(cin[0]), cur_player):
+                                if not change_state(int(cin[1]), int(cin[0]), cur_player, turn):
                                     print('please choose an empty field!')
                                     continue
                                 # when field is empty, decreases 'empty_fields'-var
                                 else:
                                     empty_fields -= 1
+                                    turn += 1
                     # when input is not full digit
                     else:
                         # when input length is higher than 1, start 'undo'
@@ -249,7 +284,16 @@ def main():
                             # when input contains an 'u' and digits after that
                             if cin.find('u') == 0 \
                             and cin.replace('u', '').isdigit():
-                                print('todo: undo')
+                                steps = int(cin.replace('u', ''))
+                                if steps > 0:
+                                    if steps <= turn - 1:
+                                        undo(steps, turn - 1)
+                                        turn -= steps
+                                    else:
+                                        print('too many steps to undo!')
+                                else:
+                                    print('please type a '
+                                          'value over 0 to undo!')
                             # ...when not
                             else:
                                 print('unknown statement. '
@@ -263,7 +307,7 @@ def main():
                                 continue
                             # when input contains an 'h'
                             if cin.find('h') == 0:
-                                print('todo: help')
+                                help()
                                 continue
                             # when input contains an 'q'
                             elif cin.find('q') == 0:
