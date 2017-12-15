@@ -62,7 +62,6 @@ def console_clear():
 
 def console_output(area):
     """console output of the area of fields"""
-    console_clear()
     cur_row = 1
     cout = '⌈ 1 2 3 4 5 6 7 ⌉\n' + str(cur_row) + ' '
     # run through all fields in the area
@@ -77,25 +76,26 @@ def console_output(area):
         elif 'bl' == field.get_state():
             cout += 'X '
         else:
-            cout += '- '
+            cout += '  '
     cout += str(cur_row) + '\n⌊ 1 2 3 4 5 6 7 ⌋'
     print(cout)
     
 def main():
     """Main-Program for the Game"""
 
-    def block_random_fields():
+    def block_fields(rand = -1):
         """blocks a random count of fields
         (between 5 and 13 and returns it)
         of random positions in the area"""
-        while True:
-            rand = randint(5, 13)
-            # when value is odd, break generating
-            if rand % 2:
-                break
-            # when value is eval, continue generating
-            else:
-                continue
+        if rand == -1:
+            while True:
+                rand = randint(5, 13)
+                # when value is odd, break generating
+                if rand % 2:
+                    break
+                # when value is eval, continue generating
+                else:
+                    continue
         c = 0
         while c < rand:
             # when random field is empty, increases counter
@@ -214,6 +214,7 @@ def main():
     game = True
     cols = 7
     rows = 7
+    fields_to_block = -1
 
     # game loop
     while game:
@@ -225,15 +226,17 @@ def main():
         round = True
 
         # decrease 'empty_fields'-var by blocked fields
-        empty_fields -= block_random_fields()
+        empty_fields -= block_fields(fields_to_block)
 
         # round loop
         while round:
+            print('\n')
             console_output(area)
+            print('\n')
             #print('points player 1:', calculate_points('p1'))
             #print('points player 2:', calculate_points('p2'))
             #print(empty_fields)
-            print('Turn:', turn)
+            #print('Turn:', turn)
 
             # test-print the objects
             """for field in area:
@@ -250,6 +253,7 @@ def main():
                     print('turn for white')
 
                 cin = input('--> ').lower()
+                console_clear()
 
                 # when input is not empty
                 if len(cin) > 0:
@@ -281,8 +285,18 @@ def main():
                     else:
                         # when input length is higher than 1, start 'undo'
                         if len(cin) > 1:
+                            # when input contains an 'r' and digits after that
+                            if cin.find('r') == 0 \
+                            and cin.replace('r', '').isdigit():
+                                block_inp = int(cin.replace('r', ''))
+                                # when value is in interval 5, 13
+                                if block_inp in [5, 7, 9, 11, 13]:
+                                    fields_to_block = block_inp
+                                    empty_fields = 0
+                                else:
+                                    print('choose an odd value between 5 and 13!')
                             # when input contains an 'u' and digits after that
-                            if cin.find('u') == 0 \
+                            elif cin.find('u') == 0 \
                             and cin.replace('u', '').isdigit():
                                 steps = int(cin.replace('u', ''))
                                 if steps > 0:
@@ -306,16 +320,20 @@ def main():
                                 print('todo: computer-mode')
                                 continue
                             # when input contains an 'h'
-                            if cin.find('h') == 0:
+                            elif cin.find('h') == 0:
                                 help()
                                 continue
                             # when input contains an 'q'
                             elif cin.find('q') == 0:
                                 game = False
                                 break
+                            # when input is not valid
+                            else:
+                                print('unknown statement. '
+                                      'please check out the help (h)!')
                             # when input contains an 'r'
-                            elif cin.find('r') == 0:
-                                empty_fields = 0
+                            """elif cin.find('r') == 0:
+                                empty_fields = 0"""
                 # when input is empty
                 else:
                     print('please make an input!')
@@ -333,6 +351,7 @@ def main():
                 points_p1 = calculate_points('p1')
                 points_p2 = calculate_points('p2')
 
+                console_clear()
                 print('points for black:', points_p1)
                 print('points for white:', points_p2)
 
