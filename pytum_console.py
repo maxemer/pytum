@@ -196,7 +196,9 @@ def main():
 
     def help():
         """prints a help text / manual"""
-        print('this is the helpfile')
+        with open('readme.txt', 'r') as helpfile:
+            data = helpfile.read()
+            print(data)
 
     def undo(step, turn):
         """undoes the states of the area given by turns"""
@@ -224,6 +226,9 @@ def main():
         empty_fields = cols * rows
         turn = 1
         round = True
+
+        help()
+        cin = input('--> ').lower()
 
         # decrease 'empty_fields'-var by blocked fields
         empty_fields -= block_fields(fields_to_block)
@@ -316,11 +321,11 @@ def main():
                         # when input length is 1
                         else:
                             # when input contains an 'c'
-                            if cin.find('c') == 0:
-                                print('todo: computer-mode')
-                                continue
+                            """if cin.find('c') == 0:
+                                print('computer-mode is not implemented yet! :(')
+                                continue"""
                             # when input contains an 'h'
-                            elif cin.find('h') == 0:
+                            if cin.find('h') == 0:
                                 help()
                                 continue
                             # when input contains an 'q'
@@ -330,7 +335,7 @@ def main():
                             # when input is not valid
                             else:
                                 print('unknown statement. '
-                                      'please check out the help (h)!')
+                                      'please check out the helpfile (h)!')
                             # when input contains an 'r'
                             """elif cin.find('r') == 0:
                                 empty_fields = 0"""
