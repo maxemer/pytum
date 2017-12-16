@@ -1,5 +1,5 @@
 """
-PyTum Game in Console and Functions
+PyTum Game in Console and Functions v2
 from EPR-Job No.5
 """
 from random import randint
@@ -12,25 +12,31 @@ __email__ = "s1539940@stud.uni-frankfurt.de"
 
 class Field():
     """class: field"""
+
     def __init__(self, col = 0, row = 0, state = 'em', turn = 0):
         """constructor"""
         self.col = col
         self.row = row
         self.state = state
-        self.turn =  turn
+        self.turn = turn
+
     def get_col(self):
         """returns column as integer"""
         return self.col
+
     def get_row(self):
         """returns row as integer"""
         return self.row
+
     def get_state(self):
         """returns state as string (em := empty, bl := blocked,
         p1 := player1/black, p2 := player2/white)"""
         return self.state
+
     def get_turn(self):
         """returns turn as integer"""
         return self.turn
+
     def set_state(self, new_state, turn):
         """set a new state of the field"""
         self.state = new_state
