@@ -220,8 +220,8 @@ def main():
     rows = 7
     fields_to_block = -1
 
-    # game loop
-    while game:
+    # start loop
+    while True:
         help()
         cin = input('--> ').lower()
         console_clear()
@@ -235,6 +235,7 @@ def main():
                     # when value is in interval 5, 13
                     if block_inp in [5, 7, 9, 11, 13]:
                         fields_to_block = block_inp
+                        break
                     else:
                         print('choose an odd value between 5 and 13!')
                         continue
@@ -246,6 +247,7 @@ def main():
             else:
                 # when input contains an 'q'
                 if cin.find('q') == 0:
+                    game = False
                     break
                 # when input is not valid
                 else:
@@ -255,6 +257,8 @@ def main():
             print('please make an input!')
             continue
 
+    # game loop
+    while game:
         # start values
         message = ''
         area = generate_area(cols, rows)
@@ -352,6 +356,8 @@ def main():
                             # when input contains an 'h'
                             if cin.find('h') == 0:
                                 help()
+                                input('press <enter> to continue... ')
+                                console_clear()
                                 continue
                             # when input contains an 'q'
                             elif cin.find('q') == 0:
@@ -392,7 +398,7 @@ def main():
                 else:
                     print('points are equal. game is undecided!')
 
-                input('\npress <enter> to continue... ')
+                input('\npress <enter> to continue (starts new game)... ')
                 console_clear()
 
 if __name__ == '__main__':
