@@ -8,12 +8,12 @@ How points are calculated:
 7 stones in a line: 119 points
 
 For the console, following inputs are allowed (* is a wildcard for digits):
-Before start and during the game:
+
+//Before start and during the game:
 r* - starts new round (* is an odd value of the fields to be blocked; *>= 5, *<=13)
-c* - like r* but only with one player against the computer
-h - show this manual/helpfile
 q - quits whole program
 
-Only during the game:
+//Only during the game:
 ** - set stone on the game area (first * for rows, second * for columns; *>=1, *<=7)
 u* - undo moves from the game (* is for the steps to undo; *>0)
+h - show this manual/helpfile

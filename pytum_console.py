@@ -63,7 +63,7 @@ def console_clear():
 def console_output(area):
     """console output of the area of fields"""
     cur_row = 1
-    cout = '⌈ 1 2 3 4 5 6 7 ⌉\n' + str(cur_row) + ' '
+    cout = '/ 1 2 3 4 5 6 7 \ \n' + str(cur_row) + ' '
     # run through all fields in the area
     for field in area:
         if cur_row != field.get_row():
@@ -77,7 +77,7 @@ def console_output(area):
             cout += 'X '
         else:
             cout += '  '
-    cout += str(cur_row) + '\n⌊ 1 2 3 4 5 6 7 ⌋'
+    cout += str(cur_row) + '\n\ 1 2 3 4 5 6 7 /'
     print(cout)
     
 def main():
@@ -220,15 +220,45 @@ def main():
 
     # game loop
     while game:
+        help()
+        cin = input('--> ').lower()
+        console_clear()
+
+        if len(cin) > 0:
+            if len(cin) > 1:
+                # when input contains an 'r' and digits after that
+                if cin.find('r') == 0 \
+                        and cin.replace('r', '').isdigit():
+                    block_inp = int(cin.replace('r', ''))
+                    # when value is in interval 5, 13
+                    if block_inp in [5, 7, 9, 11, 13]:
+                        fields_to_block = block_inp
+                    else:
+                        print('choose an odd value between 5 and 13!\n')
+                        continue
+                # ...when not
+                else:
+                    print('unknown statement!\n')
+                    continue
+            # when input length is 1
+            else:
+                # when input contains an 'q'
+                if cin.find('q') == 0:
+                    break
+                # when input is not valid
+                else:
+                    print('unknown statement!\n')
+                    continue
+        else:
+            print('please make an input!\n')
+            continue
+
         # start values
         area = generate_area(cols, rows)
-        cur_player = 'p1'
+        cur_player = 'p2'
         empty_fields = cols * rows
         turn = 1
         round = True
-
-        help()
-        cin = input('--> ').lower()
 
         # decrease 'empty_fields'-var by blocked fields
         empty_fields -= block_fields(fields_to_block)
@@ -320,10 +350,6 @@ def main():
                             continue
                         # when input length is 1
                         else:
-                            # when input contains an 'c'
-                            """if cin.find('c') == 0:
-                                print('computer-mode is not implemented yet! :(')
-                                continue"""
                             # when input contains an 'h'
                             if cin.find('h') == 0:
                                 help()
@@ -336,9 +362,6 @@ def main():
                             else:
                                 print('unknown statement. '
                                       'please check out the helpfile (h)!')
-                            # when input contains an 'r'
-                            """elif cin.find('r') == 0:
-                                empty_fields = 0"""
                 # when input is empty
                 else:
                     print('please make an input!')
@@ -369,6 +392,9 @@ def main():
                 # when points are equal
                 else:
                     print('points are equal. game is undecided!')
+
+                input('\npress <enter> to continue... ')
+                console_clear()
 
 if __name__ == '__main__':
     main()
