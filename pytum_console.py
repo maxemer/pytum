@@ -60,7 +60,7 @@ def console_clear():
         print('\n' * 99)
     print('\n')
 
-def console_output(area):
+def console_output(area, message = ''):
     """console output of the area of fields"""
     cur_row = 1
     cout = '/ 1 2 3 4 5 6 7 \ \n' + str(cur_row) + ' '
@@ -77,7 +77,9 @@ def console_output(area):
             cout += 'X '
         else:
             cout += '  '
-    cout += str(cur_row) + '\n\ 1 2 3 4 5 6 7 /'
+    cout += str(cur_row) + '\n\ 1 2 3 4 5 6 7 /\n'
+
+    print(message, '\n')
     print(cout)
     
 def main():
@@ -234,11 +236,11 @@ def main():
                     if block_inp in [5, 7, 9, 11, 13]:
                         fields_to_block = block_inp
                     else:
-                        print('choose an odd value between 5 and 13!\n')
+                        print('choose an odd value between 5 and 13!')
                         continue
                 # ...when not
                 else:
-                    print('unknown statement!\n')
+                    print('unknown statement!')
                     continue
             # when input length is 1
             else:
@@ -247,13 +249,14 @@ def main():
                     break
                 # when input is not valid
                 else:
-                    print('unknown statement!\n')
+                    print('unknown statement!')
                     continue
         else:
-            print('please make an input!\n')
+            print('please make an input!')
             continue
 
         # start values
+        message = ''
         area = generate_area(cols, rows)
         cur_player = 'p2'
         empty_fields = cols * rows
@@ -265,13 +268,7 @@ def main():
 
         # round loop
         while round:
-            print('\n')
-            console_output(area)
-            print('\n')
-            #print('points player 1:', calculate_points('p1'))
-            #print('points player 2:', calculate_points('p2'))
-            #print(empty_fields)
-            #print('Turn:', turn)
+            console_output(area, message)
 
             # test-print the objects
             """for field in area:
@@ -282,10 +279,10 @@ def main():
             if empty_fields > 0:
                 # when current player is p1
                 if cur_player == 'p1':
-                    print('turn for black')
+                    print('turn for black\n')
                 # when current player is p2
                 else:
-                    print('turn for white')
+                    print('turn for white\n')
 
                 cin = input('--> ').lower()
                 console_clear()
@@ -296,7 +293,7 @@ def main():
                     if cin.isdigit():
                         # when input length is not valid, print error and continue
                         if len(cin) > 2 or len(cin) < 2:
-                            print('please enter from 1 to 2 characters!')
+                            message = 'please enter from 1 to 2 characters!'
                             continue
                         # when input length is valid
                         else:
@@ -304,18 +301,19 @@ def main():
                             # print error and continue
                             if int(cin[0]) > rows or int(cin[1]) > cols \
                             or int(cin[0]) < 1 or int(cin[1]) < 1:
-                                print('your inputs are out of range!')
+                                message = 'your inputs are out of range!'
                                 continue
                             # when inputs are valid
                             else:
                                 # when field is not empty, print error and continue
                                 if not change_state(int(cin[1]), int(cin[0]), cur_player, turn):
-                                    print('please choose an empty field!')
+                                    message = 'please choose an empty field!'
                                     continue
                                 # when field is empty, decreases 'empty_fields'-var
                                 else:
                                     empty_fields -= 1
                                     turn += 1
+                                    message = ''
                     # when input is not full digit
                     else:
                         # when input length is higher than 1, start 'undo'
@@ -329,7 +327,8 @@ def main():
                                     fields_to_block = block_inp
                                     empty_fields = 0
                                 else:
-                                    print('choose an odd value between 5 and 13!')
+                                    message = 'choose an odd value ' \
+                                              'between 5 and 13!'
                             # when input contains an 'u' and digits after that
                             elif cin.find('u') == 0 \
                             and cin.replace('u', '').isdigit():
@@ -339,14 +338,14 @@ def main():
                                         undo(steps, turn - 1)
                                         turn -= steps
                                     else:
-                                        print('too many steps to undo!')
+                                        message = 'too many steps to undo!'
                                 else:
-                                    print('please type a '
-                                          'value over 0 to undo!')
+                                    message = 'please type a ' \
+                                              'value over 0 to undo!'
                             # ...when not
                             else:
-                                print('unknown statement. '
-                                      'please check out the help (h)!')
+                                message = 'unknown statement. ' \
+                                      'please check out the help (h)!'
                             continue
                         # when input length is 1
                         else:
@@ -360,11 +359,11 @@ def main():
                                 break
                             # when input is not valid
                             else:
-                                print('unknown statement. '
-                                      'please check out the helpfile (h)!')
+                                message = 'unknown statement. ' \
+                                      'please check out the helpfile (h)!'
                 # when input is empty
                 else:
-                    print('please make an input!')
+                    message = 'please make an input!'
                     continue
 
                 # switch player
@@ -379,9 +378,9 @@ def main():
                 points_p1 = calculate_points('p1')
                 points_p2 = calculate_points('p2')
 
-                console_clear()
-                print('points for black:', points_p1)
-                print('points for white:', points_p2)
+                #console_clear()
+                print('points for black:', points_p1,
+                      '\npoints for white:', points_p2, '\n')
 
                 # when player1 has more points than player2
                 if points_p1 > points_p2:
